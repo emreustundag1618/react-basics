@@ -1,6 +1,7 @@
 import './App.css';
 import Navbar from './components/Navbar';
 import UserList from './components/UserList';
+import AddUser from './components/AddUser';
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
     <div className="container">
       <Navbar />
       <hr />
+      <AddUser/>
       <UserList />
     </div>
   );
