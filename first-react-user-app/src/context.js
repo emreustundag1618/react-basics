@@ -1,14 +1,26 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 export const UserContext = React.createContext();
 
 const reducer = (state, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case "DELETE_USER":
             return {
                 ...state,
                 users: state.users.filter(user => action.payload !== user.id)
             }
+        case "ADD_USER":
+            return {
+                ...state,
+                users: [...state.users, action.payload]
+            }
+        case "UPDATE_USER":
+            return {
+                ...state,
+                users: state.users.map(user => user.id === action.payload.id ? action.payload : user)
+            }
+
         default:
             return state
     }
@@ -18,30 +30,18 @@ const reducer = (state, action) => {
 
 export class UserProvider extends Component {
     state = {
-        users: [
-            {
-                id: 1,
-                name: "Emre Üstündağ",
-                department: "Bilişim",
-                salary: "5000"
-            },
-            {
-                id: 2,
-                name: "Emre Üstündağ 2",
-                department: "asfasdf",
-                salary: "3000"
-            },
-            {
-                id: 3,
-                name: "Emre Üstündağ 3",
-                department: "Bifgshgflişim",
-                salary: "4000"
-            },
-        ],
+        users: [],
         dispatch: action => {
             this.setState(state => reducer(state, action))
         }
     }
+    componentDidMount = async () => {
+        const response = await axios.get("http://localhost:3004/users");
+        this.setState({
+            users: response.data
+        })
+    }
+    
     render() {
         return (
             <UserContext.Provider value={this.state}>
